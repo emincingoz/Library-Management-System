@@ -1,0 +1,70 @@
+---------------
+| Emin Cingöz |
+---------------
+
+pom.xml dependecy'leri: springfox-boot-starter ve springfox-swagger-ui aynı versiyona sahip olmalı.
+                        Swagger ui ekranı için springfox-swagger-ui dependency eklemen yeterli
+
+    <!-- Swagger -->
+	<dependency>
+		<groupId>io.springfox</groupId>
+		<artifactId>springfox-boot-starter</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+	<dependency>
+		<groupId>io.springfox</groupId>
+		<artifactId>springfox-swagger-ui</artifactId>
+		<version>3.0.0</version>
+	</dependency>
+
+
+Swagger Configurations:
+
+    @EnableSwagger2
+    @Configuration
+    public class SwaggerConfig {
+        @Bean
+        public Docket api() {
+            return new Docket(DocumentationType.SWAGGER_2)
+                    .select()
+                    .apis(RequestHandlerSelectors.basePackage("com.emincingoz"))
+                    .paths(PathSelectors.regex("/.*"))
+                    .build()
+                    .apiInfo(apiEndPointsinfo());
+
+        }
+        private ApiInfo apiEndPointsinfo() {
+            return new ApiInfoBuilder().title("Spring Boot Swagger")
+                    .description("description")
+                    .contact(new Contact("", "", ""))
+                    .license("Apache 2.0")
+                    .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html").version("1.0.0")
+                    .build();
+        }
+    }
+
+Swagger Anotasyonları:
+    Api: Marks a class as a Swagger resource. Controllerda sınıf tanımı üstünde...
+    ApiModel: Provides additional information about Swagger models. Entity'lerde...
+    ApiModelProperty: Adds and manipulates data of a model property. Entity'lerdeki değişkenlere...
+    ApiOperation: Describes an operation or typically a HTTP method against a specific path. Controllerda GetMapping, PostMapping gibi anotasyonlarla birlikte...
+    ApiParam: Adds additional meta-data for operation parameters. Controllerda fonksiyon parametrelerine...
+    ...
+
+    https://docs.swagger.io/swagger-core/v1.5.0/apidocs/index.html?io/swagger/annotations/package-summary.html
+
+Swagger ui ekranına girmek için:
+    io.springfox >= 3.X itibaren:
+        http://localhost:8080/swagger-ui/
+        http://localhost:8080/swagger-ui/index.html
+    io.springfox >= 2.X:
+        http://localhost:8080/swagger-ui.html
+
+
+Aşağıdaki NullPointerException için:
+    Hata: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException:
+          Cannot invoke "org.springframework.web.servlet.mvc.condition.PatternsRequestCondition.getPatterns()"
+          because "this.condition" is null
+
+    Application.properties dosyasına ekle:
+        spring.mvc.pathmatch.matching-strategy: ant_path_matcher
