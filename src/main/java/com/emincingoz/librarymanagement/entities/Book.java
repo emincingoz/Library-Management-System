@@ -27,4 +27,6 @@ public class Book {
 
     @Column(name = "number_of_pages")
     private Long numberOfPages;
+
+    private String genre;
 }

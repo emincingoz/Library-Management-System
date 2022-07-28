@@ -2,11 +2,12 @@ package com.emincingoz.librarymanagement.business.requests.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class CreateBookRequest {
-    private String isbn;
+@NoArgsConstructor
+public class UpdateBookRequest {
     private String title;
     private String subject;
     private String publisher;
