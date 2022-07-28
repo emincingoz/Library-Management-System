@@ -1,23 +1,14 @@
 package com.emincingoz.librarymanagement.business.abstracts;
 
-import com.emincingoz.librarymanagement.dataAccess.abstracts.BookRepository;
-import com.emincingoz.librarymanagement.entities.Book;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.emincingoz.librarymanagement.business.dtos.BookDTO;
+import com.emincingoz.librarymanagement.business.requests.book.CreateBookRequest;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class BookService {
+public interface BookService {
 
-    private final BookRepository bookRepository;
+    List<BookDTO> getAllBooks();
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
-    }
 
-    public Book addNewBook(Book book) {
-        return bookRepository.save(book);
-    }
+    void addNewBook(CreateBookRequest createBookRequest);
 }
