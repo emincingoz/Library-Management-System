@@ -1,0 +1,14 @@
+server:
+  port: 8085
+
+spring:
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/librarymsdb?ApplicationName=LMS&currentSchema=rest
+    username: libraryms
+    password: libraryms
+    driver-class-name: org.postgresql.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

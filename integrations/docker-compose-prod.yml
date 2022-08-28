@@ -1,0 +1,65 @@
+version: "3.3"
+services:
+  # -------------  PostgreSQL -------------
+  db:
+    build:
+      context: postgresql
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: libraryms
+      POSTGRES_PASSWORD: libraryms
+      POSTGRES_DB: librarymsdb
+    volumes:
+      - postgre_volume:/var/lib/postgresql/data
+
+
+  # ---------------  PGADMIN --------------
+  pgAdmin:
+    image: dpage/pgadmin4:6.9
+    ports:
+      - 7342:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: library.ms@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: libraryms
+    restart: always
+    depends_on:
+      - db
+      - backend
+
+  # --------------  BACKEND --------------
+  backend:
+    build:
+      context: ../library-management-rest-service
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8057
+    expose:
+      - 8057
+    environment:
+      DATABASE_URL: "jdbc:postgresql://db/librarymsdb?ApplicationName=LMS&currentSchema=rest"
+      DATABASE_USERNAME: "libraryms"
+      DATABASE_PASSWORD: "libraryms"
+    depends_on:
+      - db
+
+  # --------------  FRONTEND -------------
+  frontend:
+    build:
+      context: ../library-management-ui
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - backend
+      - db
+
+# ----------------  VOLUMES --------------
+volumes:
+  postgre_volume:
+
+
+  
