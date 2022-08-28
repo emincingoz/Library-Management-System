@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+
+    <changeSet id="libraryms220828-0001" author="emin.cingoz">
+        <createTable tableName="lms_book">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lms_book_pkey"/>
+            </column>
+            <column name="isbn" type="varchar(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(100)"/>
+            <column name="subject" type="VARCHAR(254)"/>
+            <column name="publisher" type="VARCHAR(100)"/>
+            <column name="language" type="VARCHAR(20)"/>
+            <column name="number_of_pages" type="BIGINT"/>
+            <column name="genre" type="VARCHAR(15)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="libraryms220828-0002" author="emin.cingoz">
+        <!--        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1" maxValue="9223372036854775807"-->
+        <!--                        minValue="1" sequenceName="hibernate_sequence" startValue="1"/>-->
+
+
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
+
+    </changeSet>
+</databaseChangeLog>

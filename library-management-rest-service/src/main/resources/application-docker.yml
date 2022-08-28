@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+'''
+minio:
+  endpoint: ${MINIO_ENDPOINT}
+  access-key: ${MINIO_USERNAME}
+  secret-key: ${MINIO_PASSWORD}
+  bucket: ${MINIO_BUCKET_NAME}
+'''
