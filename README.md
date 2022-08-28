@@ -5,13 +5,14 @@
 Applications Info
 
 **Project**
-1. Swagger Url: `http://localhost:8080/swagger-ui/`
+1. Swagger Url: `http://localhost:8085/swagger-ui/`
 
 
 ## Dependencies
 
-- Mysql
+- PostgreSQL
 - Lombok
 - Swagger
 - JPA
 - ModelMapper
+- Liquibase
