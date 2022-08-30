@@ -12,3 +12,18 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  main:
+    allow-circular-references: true
+
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 600
+  refreshTokenExpiration: 86400
+  route:
+    authentication:
+      path: auth
+      logout: logout
+      refresh: refresh
+      forgetPassword: forgetPassword
+      changePassword: changePassword
