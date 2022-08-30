@@ -1,14 +1,14 @@
-package com.emincingoz.librarymanagement.dataAccess.abstracts;
+package com.emincingoz.librarymanagement.repository;
 
 import com.emincingoz.librarymanagement.business.dtos.BookDTO;
-import com.emincingoz.librarymanagement.entities.Book;
+import com.emincingoz.librarymanagement.domain.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface IBookRepository extends JpaRepository<Book, Long> {
 
     @Query(value = "SELECT new com.emincingoz.librarymanagement.business.dtos.BookDTO"
             + " ( b.isbn, b.title, b.subject, b.publisher, b.language, b.numberOfPages, b.genre) "

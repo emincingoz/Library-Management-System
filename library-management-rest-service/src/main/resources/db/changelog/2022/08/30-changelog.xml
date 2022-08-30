@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+    <changeSet id="libraryms220830-0001" author="emin.cingoz">
+        <createTable tableName="lms_user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lms_user_pkey"/>
+            </column>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(15)" />
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(254)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="user_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tckimlik" type="VARCHAR(11)"/>
+            <column name="phone" type="VARCHAR(15)"/>
+            <column name="date_of_membership" type="VARCHAR(30)"/>
+            <column name="total_books_checked_out" type="BIGINT" />
+            <column name="refresh_token_expiration_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="refresh_token" type="varchar(36)"/>
+        </createTable>
+
+        <createSequence cycle="false" incrementBy="1" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="user_sequence" startValue="1"/>
+
+        <createTable tableName="lms_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lms_authority_pkey"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lms_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lms_user_authority_pkey"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lms_user_authority_pkey"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lms_address">
+            <column name="street_address" type="VARCHAR(254)" />
+            <column name="city" type="VARCHAR(254)" />
+            <column name="mahalle" type="VARCHAR(254)" />
+            <column name="zip_code" type="VARCHAR(254)" />
+            <column name="country" type="VARCHAR(254)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="libraryms220830-0002" author="emin.cingoz">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="lms_user_authority"
+                                 constraintName="fk4psxl0jtx6nr7rhqbynr6itoc" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="name" referencedTableName="lms_authority"
+                                 referencedTableSchemaName="rest"/>
+    </changeSet>
+
+    <changeSet id="libraryms220830-0003" author="emin.cingoz">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="lms_user_authority"
+                                 constraintName="fk_user_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="lms_user" referencedTableSchemaName="rest"/>
+    </changeSet>
+
+</databaseChangeLog>

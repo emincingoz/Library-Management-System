@@ -1,4 +1,4 @@
-package com.emincingoz.librarymanagement.entities;
+package com.emincingoz.librarymanagement.domain.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
