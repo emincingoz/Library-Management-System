@@ -1,5 +1,6 @@
 package com.emincingoz.librarymanagement.security;
 
+import com.emincingoz.librarymanagement.domain.dtos.authentication.RefreshTokenDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -11,10 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -110,5 +109,11 @@ public class JwtTokenProvider implements Serializable {
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
+    }
+
+    public RefreshTokenDTO generateRefreshToken() {
+        UUID uuid = UUID.randomUUID();
+        Instant expirationInstant = new Date(clock.now().getTime() + (refreshExpiration * 1000)).toInstant();
+        return new RefreshTokenDTO(uuid.toString(), expirationInstant);
     }
 }

@@ -1,7 +1,6 @@
-package com.emincingoz.librarymanagement.business.constants.messages;
+package com.emincingoz.librarymanagement.manager.book;
 
-public class BusinessMessages {
-
+public class BookMessageConstants {
     public static final String BOOK_ISBN_ALREADY_EXISTS = "A book with the entered ISBN already exists.";
     public static final String BOOK_ADDED_SUCCESSFULLY = "Book added successfully.";
     public static final String BOOK_LISTED_SUCCESSFULLY = "Books listed successfully.";

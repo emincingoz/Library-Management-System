@@ -1,4 +1,4 @@
-package com.emincingoz.librarymanagement.business.requests.book;
+package com.emincingoz.librarymanagement.domain.requests.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

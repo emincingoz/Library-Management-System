@@ -1,10 +1,8 @@
-package com.emincingoz.librarymanagement.business.congretes;
+package com.emincingoz.librarymanagement.manager.book;
 
-import com.emincingoz.librarymanagement.business.abstracts.BookService;
-import com.emincingoz.librarymanagement.business.constants.messages.BusinessMessages;
-import com.emincingoz.librarymanagement.business.dtos.BookDTO;
-import com.emincingoz.librarymanagement.business.requests.book.CreateBookRequest;
-import com.emincingoz.librarymanagement.business.requests.book.UpdateBookRequest;
+import com.emincingoz.librarymanagement.domain.dtos.book.BookDTO;
+import com.emincingoz.librarymanagement.domain.requests.book.CreateBookRequest;
+import com.emincingoz.librarymanagement.domain.requests.book.UpdateBookRequest;
 import com.emincingoz.librarymanagement.core.utilities.results.*;
 import com.emincingoz.librarymanagement.repository.IBookRepository;
 import com.emincingoz.librarymanagement.domain.models.Book;
@@ -15,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookManager implements BookService {
+public class BookManager implements IBookService {
 
     private final IBookRepository bookRepository;
     private ModelMapper modelMapper;
@@ -27,17 +25,17 @@ public class BookManager implements BookService {
 
     @Override
     public DataResult<List<BookDTO>> getAllBooks() {
-        return new DataSuccessResult<>(bookRepository.getAll(), BusinessMessages.BOOK_LISTED_SUCCESSFULLY);
+        return new DataSuccessResult<>(bookRepository.getAll(), BookMessageConstants.BOOK_LISTED_SUCCESSFULLY);
     }
 
     @Override
     public Result getBookByIsbn(String isbn) {
         final Optional<Book> book = bookRepository.findByIsbn(isbn);
         if(!book.isPresent())
-            return new ErrorResult(BusinessMessages.BOOK_NOT_FOUND);
+            return new ErrorResult(BookMessageConstants.BOOK_NOT_FOUND);
 
         BookDTO bookDTO = modelMapper.map(book, BookDTO.class);
-        return new DataSuccessResult<>(bookDTO, BusinessMessages.BOOK_LISTED_SUCCESSFULLY);
+        return new DataSuccessResult<>(bookDTO, BookMessageConstants.BOOK_LISTED_SUCCESSFULLY);
     }
 
     @Override
@@ -45,11 +43,11 @@ public class BookManager implements BookService {
 
         final Optional<Book> temp = bookRepository.findByIsbn(createBookRequest.getIsbn());
         if(temp.isPresent())
-            return new ErrorResult(BusinessMessages.BOOK_ISBN_ALREADY_EXISTS);
+            return new ErrorResult(BookMessageConstants.BOOK_ISBN_ALREADY_EXISTS);
 
         Book book = modelMapper.map(createBookRequest, Book.class);
         bookRepository.save(book);
-        return new SuccessResult(BusinessMessages.BOOK_ADDED_SUCCESSFULLY);
+        return new SuccessResult(BookMessageConstants.BOOK_ADDED_SUCCESSFULLY);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class BookManager implements BookService {
 
         final Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (!book.isPresent())
-            return new ErrorResult(BusinessMessages.BOOK_NOT_FOUND);
+            return new ErrorResult(BookMessageConstants.BOOK_NOT_FOUND);
 
         book.get().setLanguage(updateBookRequest.getLanguage());
         book.get().setGenre(updateBookRequest.getGenre());
@@ -65,7 +63,7 @@ public class BookManager implements BookService {
         book.get().setSubject(updateBookRequest.getSubject());
         book.get().setNumberOfPages(updateBookRequest.getNumberOfPages());
         book.get().setTitle(updateBookRequest.getTitle());
-        return new SuccessResult(BusinessMessages.BOOK_UPDATED_SUCCESSFULLY);
+        return new SuccessResult(BookMessageConstants.BOOK_UPDATED_SUCCESSFULLY);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class BookManager implements BookService {
 
         final Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (!book.isPresent())
-            return new ErrorResult(BusinessMessages.BOOK_NOT_FOUND);
-        return new SuccessResult(BusinessMessages.BOOK_DELETED_SUCCESSFULLY);
+            return new ErrorResult(BookMessageConstants.BOOK_NOT_FOUND);
+        return new SuccessResult(BookMessageConstants.BOOK_DELETED_SUCCESSFULLY);
     }
 }

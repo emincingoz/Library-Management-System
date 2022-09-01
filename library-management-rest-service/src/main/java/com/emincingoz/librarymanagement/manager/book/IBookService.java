@@ -1,14 +1,14 @@
-package com.emincingoz.librarymanagement.business.abstracts;
+package com.emincingoz.librarymanagement.manager.book;
 
-import com.emincingoz.librarymanagement.business.dtos.BookDTO;
-import com.emincingoz.librarymanagement.business.requests.book.CreateBookRequest;
-import com.emincingoz.librarymanagement.business.requests.book.UpdateBookRequest;
 import com.emincingoz.librarymanagement.core.utilities.results.DataResult;
 import com.emincingoz.librarymanagement.core.utilities.results.Result;
+import com.emincingoz.librarymanagement.domain.dtos.book.BookDTO;
+import com.emincingoz.librarymanagement.domain.requests.book.CreateBookRequest;
+import com.emincingoz.librarymanagement.domain.requests.book.UpdateBookRequest;
 
 import java.util.List;
 
-public interface BookService {
+public interface IBookService {
 
     DataResult<List<BookDTO>> getAllBooks();
 
