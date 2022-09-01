@@ -1,8 +1,8 @@
-package com.emincingoz.librarymanagement.api.controllers;
+package com.emincingoz.librarymanagement.controllers;
 
-import com.emincingoz.librarymanagement.business.abstracts.BookService;
-import com.emincingoz.librarymanagement.business.requests.book.CreateBookRequest;
-import com.emincingoz.librarymanagement.business.requests.book.UpdateBookRequest;
+import com.emincingoz.librarymanagement.manager.book.IBookService;
+import com.emincingoz.librarymanagement.domain.requests.book.CreateBookRequest;
+import com.emincingoz.librarymanagement.domain.requests.book.UpdateBookRequest;
 import com.emincingoz.librarymanagement.core.utilities.results.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final IBookService bookService;
 
     @GetMapping("v1/books")
     public ResponseEntity<?> getAllBooks() {

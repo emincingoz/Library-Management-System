@@ -88,12 +88,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Un-secure H2 Database
                 .antMatchers("/h2-console/**/**").permitAll()
-                .antMatchers("/api/auth").permitAll()
+                .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/api/refresh").permitAll()
                 .antMatchers("/api/logout").permitAll()
                 .antMatchers("/api/forgetPassword").permitAll()
                 .antMatchers("/public/**/").permitAll()
-                .antMatchers("/api/user-service/**").permitAll()
+                .antMatchers("/api/user/**").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
 
                 .anyRequest().authenticated();

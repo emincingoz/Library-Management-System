@@ -1,4 +1,4 @@
-package com.emincingoz.librarymanagement.business.dtos;
+package com.emincingoz.librarymanagement.domain.dtos.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

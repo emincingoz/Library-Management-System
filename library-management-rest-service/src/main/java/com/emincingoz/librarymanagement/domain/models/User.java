@@ -25,6 +25,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
     private Long id;
 
+    // Instead of creating a new column address_id, mark the primary key column (user_id)
+    // of the lms_address table as the foreign key to the lms_user table
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Address address;
+
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
     private String firstName;
@@ -46,12 +52,8 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private AccountStatusEnum status;
 
-    // Instead of creating a new column address_id, mark the primary key column (user_id)
-    // of the lms_address table as the foreign key to the lms_user table
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Address address;
     private String email;
+
     private String phone;
 
     @Column(name = "date_of_membership")
@@ -85,4 +87,14 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_id"), referencedColumnName = "id", name = "user_id")
     private List<UserAuthority> roles;
+
+    public User(String userName, String firstName, String lastName, String tcKimlik, String email, String phone, String password) {
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.tcKimlik = tcKimlik;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+    }
 }

@@ -27,4 +27,12 @@ public class Address {
     @Column(name = "zip_code")
     private String zipCode;
     private String country;
+
+    public Address(String streetAddress, String mahalle, String city, String zipCode, String country) {
+        this.streetAddress = streetAddress;
+        this.mahalle = mahalle;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+    }
 }

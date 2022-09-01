@@ -14,6 +14,12 @@ spring:
       matching-strategy: ant_path_matcher
   main:
     allow-circular-references: true
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
 
 jwt:
   header: Authorization
