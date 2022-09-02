@@ -5,6 +5,7 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { InputText } from "primereact/inputtext";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -27,6 +28,21 @@ const Register = () => {
 
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [firstNameFocus, setFirstNameFocus] = useState(false);
+
+  const [lastName, setLastName] = useState("");
+  const [lastNameFocus, setLastNameFocus] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [emailFocus, setEmailFocus] = useState(false);
+
+  const [phone, setPhone] = useState("");
+  const [phoneFocus, setPhoneFocus] = useState(false);
+
+  const [tcNo, setTcNo] = useState("");
+  const [tcNoFocus, setTcNoFocus] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -73,9 +89,60 @@ const Register = () => {
       {success ? (
         <section>
           <h1>Success!</h1>
-          <p>
-            <a href="#"> Sign In </a>
-          </p>
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            autoComplete="off"
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+            onFocus={() => setFirstNameFocus(true)}
+            onblur={() => setFirstNameFocus(false)}
+          />
+
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            autoComplete="off"
+            onChange={(e) => setLastName(e.target.value)}
+            required
+            onFocus={() => setLastNameFocus(true)}
+            onblur={() => setLastNameFocus(false)}
+          />
+
+          <label htmlFor="email">E-mail:</label>
+          <input
+            type="text"
+            id="email"
+            autoComplete="off"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            onFocus={() => setEmailFocus(true)}
+            onblur={() => setEmailFocus(false)}
+          />
+
+          <label htmlFor="phone">Phone Number:</label>
+          <input
+            type="text"
+            id="phone"
+            autoComplete="off"
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            onFocus={() => setPhoneFocus(true)}
+            onblur={() => setPhoneFocus(false)}
+          />
+
+          <label htmlFor="tckno">TC-Kimlik No:</label>
+          <input
+            type="text"
+            id="tckno"
+            autoComplete="off"
+            onChange={(e) => setTcNo(e.target.value)}
+            required
+            onFocus={() => setTcNoFocus(true)}
+            onblur={() => setTcNoFocus(false)}
+          />
         </section>
       ) : (
         <section>
