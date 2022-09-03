@@ -3,9 +3,24 @@ import {
   faCheck,
   faTimes,
   faInfoCircle,
+  faSolid,
+  faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputText } from "primereact/inputtext";
+import "../../styles/RegisterPage.css";
+import {
+  IconButton,
+  Button,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+  TextField,
+  InputAdornment,
+  FormHelperText,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { ReactComponent as BackIcon } from "../../assets/register/chevron-left-solid.svg";
+import { Container, Row, Col } from "react-bootstrap";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -43,6 +58,8 @@ const Register = () => {
 
   const [tcNo, setTcNo] = useState("");
   const [tcNoFocus, setTcNoFocus] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -84,189 +101,284 @@ const Register = () => {
     setSuccess(true);
   };
 
+  const handleCheckInfo = async (e) => {
+    e.preventDefault();
+
+    // TODO:: Control for tckno and firstname lastname
+
+    console.log(user, pwd);
+    setSuccess(true);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleBackButton = () => {
+    setSuccess(false);
+    setValidName(false);
+  };
+
   return (
     <>
       {success ? (
         <section>
-          <h1>Success!</h1>
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            type="text"
+          <Container>
+            <Row>
+              <Col sm={2}>
+                <Button onClick={handleBackButton}>
+                  <BackIcon width="1rem"></BackIcon>
+                </Button>
+              </Col>
+              <Col sm={10}>
+                <h2>Almost Done!</h2>
+              </Col>
+            </Row>
+          </Container>
+
+          <TextField
             id="firstName"
+            label="First Name"
+            margin="normal"
+            variant="outlined"
+            ref={userRef}
             autoComplete="off"
             onChange={(e) => setFirstName(e.target.value)}
             required
             onFocus={() => setFirstNameFocus(true)}
-            onblur={() => setFirstNameFocus(false)}
+            onBlur={() => setFirstNameFocus(false)}
           />
 
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            type="text"
+          <TextField
             id="lastName"
+            label="Last Name"
+            margin="normal"
+            variant="outlined"
+            ref={userRef}
             autoComplete="off"
             onChange={(e) => setLastName(e.target.value)}
             required
             onFocus={() => setLastNameFocus(true)}
-            onblur={() => setLastNameFocus(false)}
+            onBlur={() => setLastNameFocus(false)}
           />
 
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="text"
+          <TextField
             id="email"
+            label="E-mail"
+            margin="normal"
+            variant="outlined"
+            ref={userRef}
             autoComplete="off"
             onChange={(e) => setEmail(e.target.value)}
             required
             onFocus={() => setEmailFocus(true)}
-            onblur={() => setEmailFocus(false)}
+            onBlur={() => setEmailFocus(false)}
           />
 
-          <label htmlFor="phone">Phone Number:</label>
-          <input
-            type="text"
+          <TextField
             id="phone"
+            label="Phone Number"
+            margin="normal"
+            variant="outlined"
+            ref={userRef}
             autoComplete="off"
             onChange={(e) => setPhone(e.target.value)}
             required
             onFocus={() => setPhoneFocus(true)}
-            onblur={() => setPhoneFocus(false)}
+            onBlur={() => setPhoneFocus(false)}
           />
 
-          <label htmlFor="tckno">TC-Kimlik No:</label>
-          <input
-            type="text"
+          <TextField
             id="tckno"
+            label="TC-Kimlik No"
+            margin="normal"
+            variant="outlined"
+            ref={userRef}
             autoComplete="off"
             onChange={(e) => setTcNo(e.target.value)}
             required
             onFocus={() => setTcNoFocus(true)}
-            onblur={() => setTcNoFocus(false)}
+            onBlur={() => setTcNoFocus(false)}
           />
+
+          <br></br>
+          <Button
+            disabled={
+              firstName === "" ||
+              lastName === "" ||
+              email === "" ||
+              phone === "" ||
+              tcNo === ""
+                ? true
+                : false
+            }
+            variant="outlined"
+            onClick={handleCheckInfo}
+          >
+            Check
+          </Button>
         </section>
       ) : (
         <section>
-          {/*<p
-            ref={errRef}
-            className={errMsg ? "errmsg" : "offscreen"}
-            aria-live="assertive"
-          >
-            {errMsg}
-          </p>*/}
           <h1>Register</h1>
+          <br></br>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="username">
-              Username:
-              <span className={validName ? "valid" : "hide"}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validName || !user ? "hide" : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </label>
-            <input
-              type="text"
+            {/* Username */}
+
+            <TextField
               id="username"
+              label="User Name"
+              margin="normal"
+              variant="outlined"
               ref={userRef}
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
               required
-              aria-invalid={validName ? "false" : "true"}
-              aria-describedby="uidnote"
               onFocus={() => setUserFocus(true)}
-              onblur={() => setUserFocus(false)}
-            />
-
-            <p
-              id="uidnote"
-              className={
-                userFocus && user && !validName ? "instructions" : "offscreen"
+              onBlur={() => setUserFocus(false)}
+              error={!validName && userFocus}
+              helperText={
+                !validName && userFocus ? (
+                  <p>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    4 to 24 characters. <br />
+                    Must begin with a letter.
+                    <br />
+                    Letters, numbers, underscores, hyphens allowed.
+                  </p>
+                ) : (
+                  ""
+                )
               }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 characters. <br />
-              Must begin with a letter.
-              <br />
-              Letters, numbers, underscores, hyphens allowed.
-            </p>
-
-            <label htmlFor="password">
-              Password:
-              <FontAwesomeIcon
-                icon={faCheck}
-                className={validPwd ? "valid" : "hide"}
-              />
-              <FontAwesomeIcon
-                icon={faTimes}
-                className={validPwd || !pwd ? "hide" : "invalid"}
-              />
-            </label>
-            <input
-              type="password"
-              id="password"
-              onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
-              required
-              aria-invalid={validPwd ? "false" : "true"}
-              aria-describedby="pwdnote"
-              onFocus={() => setPwdFocus(true)}
-              onBlur={() => setPwdFocus(false)}
             />
-            <p
-              id="pwdnote"
-              className={pwdFocus && !validPwd ? "instructions" : "offscreen"}
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              8 to 24 characters.
-              <br />
-              Must include uppercase and lowercase letters, a number and a
-              special character.
-              <br />
-              Allowed special characters:{" "}
-              <span aria-label="exclamation mark">!</span>{" "}
-              <span aria-label="at symbol">@</span>{" "}
-              <span aria-label="hashtag">#</span>{" "}
-              <span aria-label="dollar sign">$</span>{" "}
-              <span aria-label="percent">%</span>
-            </p>
 
-            <label htmlFor="confirm_pwd">
-              Confirm Password:
-              <FontAwesomeIcon
-                icon={faCheck}
-                className={validMatch && matchPwd ? "valid" : "hide"}
-              />
-              <FontAwesomeIcon
-                icon={faTimes}
-                className={validMatch || !matchPwd ? "hide" : "invalid"}
-              />
-            </label>
-            <input
-              type="password"
-              id="confirm_pwd"
-              onChange={(e) => setMatchPwd(e.target.value)}
-              value={matchPwd}
-              required
-              aria-invalid={validMatch ? "false" : "true"}
-              aria-describedby="confirmnote"
-              onFocus={() => setMatchPwdFocus(true)}
-              onBlur={() => setMatchPwdFocus(false)}
-            />
-            <p
-              id="confirmnote"
-              className={
-                matchPwdFocus && !validMatch ? "instructions" : "offscreen"
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must match the first password input field.
-            </p>
+            {/* Password */}
 
-            <button
+            <br></br>
+
+            <FormControl /*sx={{ m: 1, width: "25ch" }}*/ variant="outlined">
+              <InputLabel
+                htmlFor="outlined-adornment-password"
+                required
+                error={!validPwd && pwdFocus}
+              >
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                onChange={(e) => setPwd(e.target.value)}
+                value={pwd}
+                required
+                onFocus={() => setPwdFocus(true)}
+                onBlur={() => setPwdFocus(false)}
+                error={!validPwd && pwdFocus}
+                helperText={
+                  !validPwd && pwdFocus ? (
+                    <p>
+                      <FontAwesomeIcon icon={faInfoCircle} />
+                      8 to 24 characters.
+                      <br />
+                      Must include uppercase and lowercase letters, a number and
+                      a special character.
+                      <br />
+                      Allowed special characters:{"!@#$%"}
+                    </p>
+                  ) : (
+                    ""
+                  )
+                }
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {!validPwd && pwdFocus ? (
+                <FormHelperText>
+                  <p style={{ color: "red" }}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    8 to 24 characters.
+                    <br />
+                    Must include uppercase and lowercase letters, a number and a
+                    special character.
+                    <br />
+                    Allowed special characters:{" "}
+                    <span aria-label="exclamation mark">!</span>{" "}
+                    <span aria-label="at symbol">@</span>{" "}
+                    <span aria-label="hashtag">#</span>{" "}
+                    <span aria-label="dollar sign">$</span>{" "}
+                    <span aria-label="percent">%</span>
+                  </p>
+                </FormHelperText>
+              ) : (
+                ""
+              )}
+            </FormControl>
+
+            <br></br>
+
+            {/* Confirm Password */}
+
+            <FormControl /*sx={{ m: 1, width: "25ch" }}*/ variant="outlined">
+              <InputLabel
+                htmlFor="outlined-adornment-password"
+                required
+                error={!validMatch && matchPwdFocus}
+              >
+                Confirm
+              </InputLabel>
+              <OutlinedInput
+                id="confirm_pwd"
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                onChange={(e) => setMatchPwd(e.target.value)}
+                value={matchPwd}
+                required
+                aria-invalid={validMatch ? "false" : "true"}
+                aria-describedby="confirmnote"
+                onFocus={() => setMatchPwdFocus(true)}
+                onBlur={() => setMatchPwdFocus(false)}
+                error={!validMatch && matchPwdFocus}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {!validMatch && matchPwdFocus ? (
+                <FormHelperText>
+                  <p style={{ color: "red" }}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    Must match the first password input field.
+                  </p>
+                </FormHelperText>
+              ) : (
+                ""
+              )}
+            </FormControl>
+
+            <br></br>
+            <Button
               disabled={!validName || !validPwd || !validMatch ? true : false}
+              variant="outlined"
+              onClick={handleSubmit}
             >
               Sign Up
-            </button>
+            </Button>
           </form>
 
           <p>
