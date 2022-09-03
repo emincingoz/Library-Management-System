@@ -9,6 +9,8 @@ import com.emincingoz.librarymanagement.domain.models.User;
 import com.emincingoz.librarymanagement.domain.requests.user.UserRegisterRequest;
 import com.emincingoz.librarymanagement.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,14 +24,14 @@ public class UserManager implements IUserService{
     private final IUserRepository userRepository;
 
     @Override
-    public Result register(UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<?> register(UserRegisterRequest userRegisterRequest) {
 
         Result ruleResult = BusinessRules.run(
                 isUserEmailExists(userRegisterRequest.getEmail()),
                 isUserUserNameExists(userRegisterRequest.getUserName()));
 
         if (ruleResult != null)
-            return ruleResult;
+            return new ResponseEntity<>(ruleResult, HttpStatus.CONFLICT);
 
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword()).substring(8);
@@ -45,13 +47,14 @@ public class UserManager implements IUserService{
         );
 
         // TODO:: Temporarily set to true, send activation code to e-mail address
+        // TODO:: Return 423 Locked http response when user not activated
         user.setActivated(true);
         user.setDateOfMembership(LocalDateTime.now());
         user.setTotalBooksCheckedOut(Integer.toUnsignedLong(0));
 
         userRepository.save(user);
 
-        return new SuccessResult(UserMessageConstants.USER_REGISTER_SUCCESS);
+        return new ResponseEntity<>(new SuccessResult(UserMessageConstants.USER_REGISTER_SUCCESS), HttpStatus.ACCEPTED);
     }
 
     private Result isUserEmailExists(String email) {

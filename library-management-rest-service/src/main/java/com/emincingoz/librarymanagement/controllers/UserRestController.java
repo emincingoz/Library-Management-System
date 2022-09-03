@@ -18,6 +18,6 @@ public class UserRestController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest userRegisterRequest) {
-        return ResponseEntity.ok(userService.register(userRegisterRequest));
+        return userService.register(userRegisterRequest);
     }
 }
