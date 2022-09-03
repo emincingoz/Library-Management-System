@@ -17,13 +17,20 @@ import {
   TextField,
   InputAdornment,
   FormHelperText,
+  Snackbar,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { ReactComponent as BackIcon } from "../../assets/register/chevron-left-solid.svg";
 import { Container, Row, Col } from "react-bootstrap";
+import axios from "../../services/axios";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
+const BASE_URL = "/api/user";
+const REGISTER_URL = BASE_URL + "/register";
 
 const Register = () => {
   const userRef = useRef();
@@ -60,6 +67,16 @@ const Register = () => {
   const [tcNoFocus, setTcNoFocus] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    message: "",
+    status: "error",
+  });
+
+  const { vertical, horizontal, open } = snackbar;
 
   useEffect(() => {
     userRef.current.focus();
@@ -106,8 +123,74 @@ const Register = () => {
 
     // TODO:: Control for tckno and firstname lastname
 
-    console.log(user, pwd);
-    setSuccess(true);
+    try {
+      const response = await axios.post(
+        REGISTER_URL,
+        JSON.stringify({
+          userName: user,
+          firstName,
+          lastName,
+          password: pwd,
+          email: email,
+          phone,
+          tckno: tcNo,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: false,
+        }
+      );
+
+      setSnackbar({
+        open: true,
+        vertical: "top",
+        horizontal: "left",
+        message: "Registration Success",
+        status: "success",
+      });
+
+      // TODO:: Clear input fields
+    } catch (err) {
+      console.log("hata");
+      if (!err?.response) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "No Server Response",
+          status: "error",
+        });
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 409) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "Username Taken",
+          status: "error",
+        });
+        setErrMsg("Username Taken");
+      } else if (err.response?.status === 423) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "User information must be entered correctly.",
+          status: "error",
+        });
+        setErrMsg("User information must be entered correctly.");
+      } else {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "Registration Failed",
+          status: "error",
+        });
+        setErrMsg("Registration Failed");
+      }
+      errRef.current.focus();
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -117,6 +200,10 @@ const Register = () => {
   const handleBackButton = () => {
     setSuccess(false);
     setValidName(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ open: false, vertical: "top", horizontal: "center" });
   };
 
   return (
@@ -217,6 +304,22 @@ const Register = () => {
           >
             Check
           </Button>
+
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{ vertical, horizontal }}
+            key={vertical + horizontal}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbar.status}
+              sx={{ width: "100%" }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
         </section>
       ) : (
         <section>
@@ -274,21 +377,6 @@ const Register = () => {
                 onFocus={() => setPwdFocus(true)}
                 onBlur={() => setPwdFocus(false)}
                 error={!validPwd && pwdFocus}
-                helperText={
-                  !validPwd && pwdFocus ? (
-                    <p>
-                      <FontAwesomeIcon icon={faInfoCircle} />
-                      8 to 24 characters.
-                      <br />
-                      Must include uppercase and lowercase letters, a number and
-                      a special character.
-                      <br />
-                      Allowed special characters:{"!@#$%"}
-                    </p>
-                  ) : (
-                    ""
-                  )
-                }
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
