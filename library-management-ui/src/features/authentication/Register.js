@@ -25,9 +25,18 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { ReactComponent as BackIcon } from "../../assets/register/chevron-left-solid.svg";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "../../services/axios";
+import InputMask from "react-input-mask";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const TCNO_REGEX = /^[1-9]{1}[0-9]{9}[02468]{1}$/;
+const PHONE_NUMBER_REGEX =
+  /^(5)([0-9]{2})\s?([0-9]{3})\s?([0-9]{2})\s?([0-9]{2})$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const BIRTH_YEAR_REGEX = /^(19|20)\d{2}$/;
 
 const BASE_URL = "/api/user";
 const REGISTER_URL = BASE_URL + "/register";
@@ -58,13 +67,20 @@ const Register = () => {
   const [lastNameFocus, setLastNameFocus] = useState(false);
 
   const [email, setEmail] = useState("");
+  const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
 
   const [phone, setPhone] = useState("");
+  const [validPhone, setValidPhone] = useState(false);
   const [phoneFocus, setPhoneFocus] = useState(false);
 
   const [tcNo, setTcNo] = useState("");
+  const [validTcNo, setValidTcNo] = useState(false);
   const [tcNoFocus, setTcNoFocus] = useState(false);
+
+  const [birthYear, setBirthYear] = useState(null);
+  const [validBirthYear, setValidBirthYear] = useState(false);
+  const [birthYearFocus, setBirthYearFocus] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -102,6 +118,42 @@ const Register = () => {
     setErrMsg(" ");
   }, [user, pwd, matchPwd]);
 
+  useEffect(() => {
+    const result = EMAIL_REGEX.test(email);
+    console.log(result);
+    console.log(email);
+    setValidEmail(result);
+  }, [email]);
+
+  useEffect(() => {
+    const result = TCNO_REGEX.test(tcNo);
+    console.log(result);
+    console.log(tcNo);
+    setValidTcNo(result);
+  }, [tcNo]);
+
+  useEffect(() => {
+    const result = BIRTH_YEAR_REGEX.test(birthYear);
+    console.log(result);
+    console.log(tcNo);
+    setValidBirthYear(result);
+  }, [birthYear]);
+
+  useEffect(() => {
+    var phoneNumber = "";
+    if (phone.length === 14) {
+      phoneNumber =
+        phone.substring(1, 4) +
+        phone.substring(6, 9) +
+        phone.substring(10, phone.length);
+    }
+
+    const result = PHONE_NUMBER_REGEX.test(phoneNumber);
+    console.log(result);
+    console.log(phoneNumber);
+    setValidPhone(result);
+  }, [phone]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -123,6 +175,11 @@ const Register = () => {
 
     // TODO:: Control for tckno and firstname lastname
 
+    var phoneNumber =
+      phone.substring(1, 4) +
+      phone.substring(6, 9) +
+      phone.substring(10, phone.length);
+
     try {
       const response = await axios.post(
         REGISTER_URL,
@@ -132,8 +189,9 @@ const Register = () => {
           lastName,
           password: pwd,
           email: email,
-          phone,
+          phone: phoneNumber,
           tckno: tcNo,
+          birthYear: birthYear,
         }),
         {
           headers: { "Content-Type": "application/json" },
@@ -171,6 +229,15 @@ const Register = () => {
         });
         setErrMsg("Username Taken");
       } else if (err.response?.status === 423) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "User Not Activated.",
+          status: "error",
+        });
+        setErrMsg("User Not Activated.");
+      } else if (err.response?.status === 417) {
         setSnackbar({
           open: true,
           vertical: "top",
@@ -228,7 +295,6 @@ const Register = () => {
             label="First Name"
             margin="normal"
             variant="outlined"
-            ref={userRef}
             autoComplete="off"
             onChange={(e) => setFirstName(e.target.value)}
             required
@@ -241,7 +307,6 @@ const Register = () => {
             label="Last Name"
             margin="normal"
             variant="outlined"
-            ref={userRef}
             autoComplete="off"
             onChange={(e) => setLastName(e.target.value)}
             required
@@ -254,38 +319,101 @@ const Register = () => {
             label="E-mail"
             margin="normal"
             variant="outlined"
-            ref={userRef}
             autoComplete="off"
             onChange={(e) => setEmail(e.target.value)}
             required
             onFocus={() => setEmailFocus(true)}
             onBlur={() => setEmailFocus(false)}
+            error={!validEmail && emailFocus}
+            helperText={
+              !validEmail && emailFocus ? (
+                <p>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  It must be real email address
+                </p>
+              ) : (
+                ""
+              )
+            }
           />
 
-          <TextField
-            id="phone"
-            label="Phone Number"
-            margin="normal"
-            variant="outlined"
-            ref={userRef}
-            autoComplete="off"
+          <InputMask
+            mask="(999) 999-9999"
             onChange={(e) => setPhone(e.target.value)}
-            required
-            onFocus={() => setPhoneFocus(true)}
             onBlur={() => setPhoneFocus(false)}
-          />
+            onFocus={() => setPhoneFocus(true)}
+            required
+          >
+            {(inputProps) => (
+              <TextField
+                id="phone"
+                label="Phone Number"
+                margin="normal"
+                variant="outlined"
+                autoComplete="off"
+                maxLength={10}
+                error={!validPhone && phoneFocus}
+                helperText={
+                  !validPhone && phoneFocus ? (
+                    <p>
+                      <FontAwesomeIcon icon={faInfoCircle} />
+                      10 character numbers. <br />
+                      It must be start with 5
+                    </p>
+                  ) : (
+                    ""
+                  )
+                }
+              />
+            )}
+          </InputMask>
 
           <TextField
             id="tckno"
             label="TC-Kimlik No"
             margin="normal"
             variant="outlined"
-            ref={userRef}
+            type="text"
             autoComplete="off"
             onChange={(e) => setTcNo(e.target.value)}
             required
             onFocus={() => setTcNoFocus(true)}
             onBlur={() => setTcNoFocus(false)}
+            inputProps={{ minLength: 11, maxLength: 11 }}
+            error={!validTcNo && tcNoFocus}
+            helperText={
+              !validTcNo && tcNoFocus ? (
+                <p>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  11 character numbers. <br />
+                  It must be real Tc Kimlik No
+                </p>
+              ) : (
+                ""
+              )
+            }
+          />
+
+          <TextField
+            id="birthYear"
+            label="Birth Year"
+            margin="normal"
+            variant="outlined"
+            autoComplete="off"
+            onChange={(e) => setBirthYear(e.target.value)}
+            required
+            onFocus={() => setBirthYearFocus(true)}
+            onBlur={() => setBirthYearFocus(false)}
+            error={!validBirthYear && birthYearFocus}
+            helperText={
+              !validBirthYear && birthYearFocus ? (
+                <p>
+                  <FontAwesomeIcon icon={faInfoCircle} />4 character numbers
+                </p>
+              ) : (
+                ""
+              )
+            }
           />
 
           <br></br>

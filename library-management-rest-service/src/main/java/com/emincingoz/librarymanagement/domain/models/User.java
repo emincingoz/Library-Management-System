@@ -39,6 +39,9 @@ public class User {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
+    @Column(name = "birth_year")
+    private Integer birthYear;
+
     @Size(max = 50)
     @Column(name = "user_name", length = 50)
     private String userName;

@@ -14,6 +14,7 @@ public class UserRegisterRequest {
     private String email;
     private String phone;
     private String tckno;
+    private Integer birthYear;
 
     public UserRegisterRequest(String userName,
                                String firstName,
@@ -21,7 +22,8 @@ public class UserRegisterRequest {
                                String password,
                                String email,
                                String phone,
-                               String tckno) {
+                               String tckno,
+                               Integer birthYear) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,5 +31,6 @@ public class UserRegisterRequest {
         this.email = email;
         this.tckno = tckno;
         this.phone = phone;
+        this.birthYear = birthYear;
     }
 }
