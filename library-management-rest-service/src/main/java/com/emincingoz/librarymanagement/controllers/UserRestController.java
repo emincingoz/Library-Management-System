@@ -2,6 +2,7 @@ package com.emincingoz.librarymanagement.controllers;
 
 import com.emincingoz.librarymanagement.domain.requests.user.UserRegisterRequest;
 import com.emincingoz.librarymanagement.manager.user.IUserService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class UserRestController {
     private final IUserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<?> register(@RequestBody UserRegisterRequest userRegisterRequest) throws UnirestException {
         return userService.register(userRegisterRequest);
     }
 }
