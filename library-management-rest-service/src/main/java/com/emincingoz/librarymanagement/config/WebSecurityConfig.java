@@ -1,4 +1,4 @@
-package com.emincingoz.librarymanagement.core.utilities.config;
+package com.emincingoz.librarymanagement.config;
 
 import com.emincingoz.librarymanagement.security.JwtAuthenticationEntryPoint;
 import com.emincingoz.librarymanagement.security.JwtAuthorizationTokenFilter;

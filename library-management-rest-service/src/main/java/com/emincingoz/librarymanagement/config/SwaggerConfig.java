@@ -1,4 +1,4 @@
-package com.emincingoz.librarymanagement.core.utilities.config;
+package com.emincingoz.librarymanagement.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
