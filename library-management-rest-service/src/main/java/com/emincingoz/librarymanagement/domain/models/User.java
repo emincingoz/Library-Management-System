@@ -91,7 +91,7 @@ public class User {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_id"), referencedColumnName = "id", name = "user_id")
     private List<UserAuthority> roles;
 
-    public User(String userName, String firstName, String lastName, String tcKimlik, String email, String phone, String password) {
+    public User(String userName, String firstName, String lastName, String tcKimlik, String email, String phone, String password, Integer birthYear) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,5 +99,6 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.birthYear = birthYear;
     }
 }
