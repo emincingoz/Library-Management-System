@@ -1,19 +1,14 @@
 server:
-  port: 8085
+  port: 8087
 
 spring:
   liquibase:
     change-log: classpath:db/liquibase-changelog.xml
   datasource:
-    url: jdbc:postgresql://localhost:5432/librarymsdb?ApplicationName=LMS&currentSchema=rest
+    url: jdbc:postgresql://localhost:5432/librarymsdb?ApplicationName=LMS&currentSchema=mail
     username: libraryms
     password: libraryms
     driver-class-name: org.postgresql.Driver
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher  # for swagger
-  main:
-    allow-circular-references: true
   jpa:
     properties:
       hibernate:
@@ -25,19 +20,6 @@ spring:
     port: 5672
     username: libraryms
     password: libraryms
-
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 600
-  refreshTokenExpiration: 86400
-  route:
-    authentication:
-      path: auth
-      logout: logout
-      refresh: refresh
-      forgetPassword: forgetPassword
-      changePassword: changePassword
 
 message-broker-queues:
   job-mail-create: job.mail.create

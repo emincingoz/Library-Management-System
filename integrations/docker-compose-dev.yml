@@ -24,6 +24,20 @@ services:
       PGADMIN_DEFAULT_EMAIL: library.ms@hotmail.com
       PGADMIN_DEFAULT_PASSWORD: libraryms
     restart: always
+  
+  # ----------  MESSAGE BROKKER ---------
+  messageBroker:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: libraryms
+      RABBITMQ_DEFAULT_PASS: libraryms
+    volumes:
+      - messageBroker_volume:/var/lib/rabbitmq
 
 volumes:
   postgre_volume:
+  messageBroker_volume:
