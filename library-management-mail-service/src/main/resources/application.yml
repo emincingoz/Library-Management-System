@@ -9,20 +9,30 @@ spring:
     username: libraryms
     password: libraryms
     driver-class-name: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
   rabbitmq:
     host: localhost
     port: 5672
     username: libraryms
     password: libraryms
+  mail:
+    host: smtp.office365.com
+    port: 587
+    username: library1.ms@hotmail.com
+    password: librarymss1
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: false
+          auth: true
+          starttls:
+            enable: true
 
 message-broker-queues:
   job-mail-create: job.mail.create
   job-mail-update: job.mail.update
   job-mail-delete: job.mail.delete
   job-mail-send: job.mail.send
+
+job-settings:
+  mail-send-interval: 10000

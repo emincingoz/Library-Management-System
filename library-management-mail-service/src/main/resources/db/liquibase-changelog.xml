@@ -12,4 +12,5 @@
     <property name="uuid_type" value="RAW(32)" dbms="oracle"/>
 
     <!--  2022 - 09   -->
+    <include file="db/changelog/2022/09/05-changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
