@@ -15,10 +15,10 @@ spring:
     username: libraryms
     password: libraryms
   mail:
-    host: smtp.office365.com
-    port: 587
-    username: library1.ms@hotmail.com
-    password: librarymss1
+    host: smtp.mailtrap.io
+    port: 2525
+    username: ca8b1567bb1e95
+    password: b9ec1376b42646
     properties:
       mail:
         smtp:
