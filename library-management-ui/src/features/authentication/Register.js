@@ -19,16 +19,14 @@ import {
   FormHelperText,
   Snackbar,
   Alert,
-  AlertTitle,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { ReactComponent as BackIcon } from "../../assets/register/chevron-left-solid.svg";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "../../services/axios";
 import InputMask from "react-input-mask";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -40,6 +38,7 @@ const BIRTH_YEAR_REGEX = /^(19|20)\d{2}$/;
 
 const BASE_URL = "/api/user";
 const REGISTER_URL = BASE_URL + "/register";
+const VERIFY_ACCOUNT_URL = BASE_URL + "/verifyAccount";
 
 const Register = () => {
   const userRef = useRef();
@@ -93,6 +92,10 @@ const Register = () => {
   });
 
   const { vertical, horizontal, open } = snackbar;
+
+  const [verificationDialogOpen, setVerificationDialogOpen] = useState(false);
+
+  const [verificationCode, setVerificationCode] = useState("");
 
   useEffect(() => {
     userRef.current.focus();
@@ -207,6 +210,9 @@ const Register = () => {
         status: "success",
       });
 
+      // When the registration is successful, it sends a confirmation email to verify the email address.
+      setVerificationDialogOpen(true);
+
       // TODO:: Clear input fields
     } catch (err) {
       console.log("hata");
@@ -256,7 +262,7 @@ const Register = () => {
         });
         setErrMsg("Registration Failed");
       }
-      errRef.current.focus();
+      //errRef.current.focus();
     }
   };
 
@@ -271,6 +277,69 @@ const Register = () => {
 
   const handleSnackbarClose = () => {
     setSnackbar({ open: false, vertical: "top", horizontal: "center" });
+  };
+
+  const handleVerificationDialogClose = () => {
+    setVerificationDialogOpen(false);
+  };
+
+  const handleVerificationCodeEntered = async () => {
+    setUser("emin");
+    console.log("userds: " + user);
+    console.log("aasdsfd: " + verificationCode);
+    try {
+      const response = await axios.post(
+        VERIFY_ACCOUNT_URL,
+        JSON.stringify({
+          userName: user,
+          verificationCode: verificationCode,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: false,
+        }
+      );
+
+      setSnackbar({
+        open: true,
+        vertical: "top",
+        horizontal: "left",
+        message: "Account Verification Success. Please Log In",
+        status: "success",
+      });
+
+      // When the registration is successful, it sends a confirmation email to verify the email address.
+      setVerificationDialogOpen(false);
+    } catch (err) {
+      if (!err?.response) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "No Server Response",
+          status: "error",
+        });
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 208) {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "User is Already Activated",
+          status: "success",
+        });
+        setErrMsg("User is Already Activated");
+      } else {
+        setSnackbar({
+          open: true,
+          vertical: "top",
+          horizontal: "left",
+          message: "Verification Failed",
+          status: "error",
+        });
+        setErrMsg("Verification Failed");
+      }
+    }
   };
 
   return (
@@ -448,6 +517,38 @@ const Register = () => {
               {snackbar.message}
             </Alert>
           </Snackbar>
+
+          <Dialog
+            onClose={handleVerificationDialogClose}
+            open={verificationDialogOpen}
+          >
+            <DialogTitle>Email Verification</DialogTitle>
+            <div className="verification">
+              <p style={{ fontSize: 20 }}>
+                We will send verification code on your email
+              </p>
+              <TextField
+                id="verificationCode"
+                label="Verification Code"
+                margin="normal"
+                variant="outlined"
+                autoComplete="off"
+                onChange={(e) => setVerificationCode(e.target.value)}
+                required
+              />
+              <br></br>
+              <Button
+                style={{ marginBottom: 10, fontSize: 15 }}
+                disabled={verificationCode.length != 6}
+                variant="outlined"
+                onClick={handleVerificationCodeEntered}
+              >
+                Verify Account
+              </Button>
+              <br></br>
+              <p style={{ fontSize: 17 }}>Didn't receive code? Resend</p>
+            </div>
+          </Dialog>
         </section>
       ) : (
         <section>

@@ -5,17 +5,15 @@ import com.emincingoz.librarymanagement.core.utilities.results.ErrorResult;
 import com.emincingoz.librarymanagement.core.utilities.results.Result;
 import com.emincingoz.librarymanagement.core.utilities.results.SuccessResult;
 import com.emincingoz.librarymanagement.domain.dtos.mail.MailDTO;
-import com.emincingoz.librarymanagement.domain.models.Address;
 import com.emincingoz.librarymanagement.domain.models.User;
 import com.emincingoz.librarymanagement.domain.requests.user.UserRegisterRequest;
+import com.emincingoz.librarymanagement.domain.requests.user.UserVerificationRequest;
 import com.emincingoz.librarymanagement.infrastructure.nationalityPeopleValidator.NationalityPeopleModel;
 import com.emincingoz.librarymanagement.infrastructure.nationalityPeopleValidator.NationalityPeopleValidator;
 import com.emincingoz.librarymanagement.manager.mail.IMailService;
 import com.emincingoz.librarymanagement.repository.IUserRepository;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +21,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -85,7 +83,7 @@ public class UserManager implements IUserService{
         // Return 423 Code Http
         // TODO:: Temporarily set to true, send activation code to e-mail address
         // TODO:: Return 423 Locked http response when user not activated
-        user.setActivated(true);
+        user.setActivated(false);
         user.setDateOfMembership(LocalDateTime.now());
         user.setTotalBooksCheckedOut(Integer.toUnsignedLong(0));
 
@@ -94,8 +92,30 @@ public class UserManager implements IUserService{
         return new ResponseEntity<>(new SuccessResult(UserMessageConstants.USER_REGISTER_SUCCESS), HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public ResponseEntity<?> verifyAccount(UserVerificationRequest userVerificationRequest) {
+
+        User user = userRepository.findByUserName(userVerificationRequest.getUserName());
+
+        if (user == null)
+            return new ResponseEntity<>(new ErrorResult(), HttpStatus.CONFLICT);
+
+        // Http Status code 208
+        if (user.isActivated())
+            return new ResponseEntity<>(new ErrorResult(), HttpStatus.ALREADY_REPORTED);
+
+        if (Objects.equals(user.getActivationKey(), userVerificationRequest.getVerificationCode())) {
+            user.setActivated(true);
+            return new ResponseEntity<>(new SuccessResult(), HttpStatus.ACCEPTED);
+        }
+
+        return new ResponseEntity<>(new ErrorResult(), HttpStatus.CONFLICT);
+    }
+
     private void sendVerificationEmail(User user) {
         String verificationCode = UUID.randomUUID().toString().substring(1, 7);
+
+        user.setActivationKey(verificationCode);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String currentTime = LocalDateTime.now().format(formatter);
@@ -120,6 +140,18 @@ public class UserManager implements IUserService{
         User user = this.userRepository.findByUserName(userName);
         if (user != null) {
             return new ErrorResult(UserMessageConstants.USER_REGISTER_ERROR_USERNAME_EXIST);
+        }
+        return new SuccessResult();
+    }
+
+    private Result isUserActive(String userName) {
+        User user = this.userRepository.findByUserName(userName);
+
+        if (user != null && user.isActivated()) {
+            return new ErrorResult(UserMessageConstants.USER_ACTIVE);
+        }
+        if (user == null) {
+            return new ErrorResult(UserMessageConstants.USER_NOT_FOUND);
         }
         return new SuccessResult();
     }

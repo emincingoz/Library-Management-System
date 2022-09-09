@@ -86,3 +86,8 @@ button {
 .line {
     display: inline-block;
 }
+
+.verification {
+    text-align: center;
+    padding: 1rem;
+}

@@ -1,6 +1,8 @@
 package com.emincingoz.librarymanagement.controllers;
 
+import com.emincingoz.librarymanagement.domain.dtos.user.UserVerificationDTO;
 import com.emincingoz.librarymanagement.domain.requests.user.UserRegisterRequest;
+import com.emincingoz.librarymanagement.domain.requests.user.UserVerificationRequest;
 import com.emincingoz.librarymanagement.manager.user.IUserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +22,10 @@ public class UserRestController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest userRegisterRequest) throws UnirestException {
         return userService.register(userRegisterRequest);
+    }
+
+    @PostMapping("/verifyAccount")
+    public ResponseEntity<?> verifyAccount(@RequestBody UserVerificationRequest userVerificationRequest) {
+        return userService.verifyAccount(userVerificationRequest);
     }
 }
