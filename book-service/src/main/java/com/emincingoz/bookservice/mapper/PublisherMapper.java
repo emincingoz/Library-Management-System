@@ -5,6 +5,11 @@ import com.emincingoz.bookservice.dto.PublisherDTO;
 import com.emincingoz.bookservice.repository.entity.Publisher;
 import org.mapstruct.Mapper;
 
+/**
+ * Publisher mapper between dto and entity
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Mapper(componentModel = "spring")
 public interface PublisherMapper {
     Publisher map2Publisher(PublisherDTO publisherDTO);

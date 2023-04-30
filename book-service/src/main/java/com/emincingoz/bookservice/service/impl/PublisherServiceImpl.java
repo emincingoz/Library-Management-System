@@ -13,6 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Publisher service interface implementation
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Log4j2
 @Service
 public class PublisherServiceImpl implements PublisherService {
@@ -25,6 +30,11 @@ public class PublisherServiceImpl implements PublisherService {
         this.publisherMapper = publisherMapper;
     }
 
+    /**
+     * Returns publisher dto by given publisher name
+     * @param publisherName
+     * @return PublisherDTO
+     */
     @Override
     public PublisherDTO getPublisherByName(String publisherName) {
         if (Strings.isNullOrEmpty(publisherName)) {
@@ -38,6 +48,11 @@ public class PublisherServiceImpl implements PublisherService {
         return publisherMapper.map2PublisherDTO(publisher);
     }
 
+    /**
+     * Adds new publisher if it is not exists. Then returns added publisher as dto
+     * @param publisherCreateDTO
+     * @return PublisherDTO
+     */
     @Override
     public PublisherDTO addPublisher(PublisherCreateDTO publisherCreateDTO) {
         if (publisherCreateDTO == null) {

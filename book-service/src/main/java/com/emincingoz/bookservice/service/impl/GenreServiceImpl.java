@@ -16,6 +16,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Genre service interface implementation
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Log4j2
 @Service
 public class GenreServiceImpl implements GenreService {
@@ -28,6 +33,11 @@ public class GenreServiceImpl implements GenreService {
         this.genreMapper = genreMapper;
     }
 
+    /**
+     * Returns genre dto by given genre name
+     * @param genreName
+     * @return GenreDTO
+     */
     @Override
     public GenreDTO getGenreByGenreName(String genreName) {
         if (Strings.isNullOrEmpty(genreName)) {
@@ -41,6 +51,11 @@ public class GenreServiceImpl implements GenreService {
         return genreMapper.map2GenreDTO(genre);
     }
 
+    /**
+     * Returns genre dto list by given genre name list
+     * @param genreNameList
+     * @return List<GenreDTO>
+     */
     @Override
     public List<GenreDTO> getGenresByGenreNameList(Collection<String> genreNameList) {
         if (CollectionUtils.isEmpty(genreNameList)) {
@@ -55,6 +70,11 @@ public class GenreServiceImpl implements GenreService {
         return genreMapper.map2GenreDTOList(genreList);
     }
 
+    /**
+     * Adds new genre if genre is not already added. Then returns the added genre as dto
+     * @param genreCreateDTO
+     * @return GenreDTO
+     */
     @Override
     public GenreDTO addGenre(GenreCreateDTO genreCreateDTO) {
         if (genreCreateDTO == null) {

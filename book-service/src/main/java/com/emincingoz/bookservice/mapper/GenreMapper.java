@@ -7,6 +7,11 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
+/**
+ * Genre mapper between dto and genre entity
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Mapper(componentModel = "spring")
 public interface GenreMapper {
     Genre map2Genre(GenreDTO genreDTO);

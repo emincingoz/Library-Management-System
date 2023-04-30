@@ -8,6 +8,11 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
+/**
+ * Book mapper between dto and book entity
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Mapper(componentModel = "spring")
 public interface BookMapper {
 

@@ -7,6 +7,11 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
+/**
+ * Interpreter mapper between dto and interpreter entity
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Mapper(componentModel = "spring")
 public interface InterpreterMapper {
     Interpreter map2Interpreter(InterpreterDTO interpreterDTO);

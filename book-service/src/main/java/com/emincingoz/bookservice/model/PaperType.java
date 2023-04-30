@@ -1,7 +1,6 @@
 package com.emincingoz.bookservice.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Enum for BOOK Table paper type column

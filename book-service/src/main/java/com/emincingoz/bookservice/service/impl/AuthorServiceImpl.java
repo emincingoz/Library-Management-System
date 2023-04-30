@@ -1,5 +1,9 @@
 package com.emincingoz.bookservice.service.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 import com.emincingoz.bookservice.dto.AuthorCreateDTO;
 import com.emincingoz.bookservice.dto.AuthorDTO;
 import com.emincingoz.bookservice.exception.AuthorException;
@@ -12,10 +16,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Author Service Interface Implementation
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Log4j2
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -28,6 +33,11 @@ public class AuthorServiceImpl implements AuthorService {
         this.authorMapper = authorMapper;
     }
 
+    /**
+     * Returns specific author by author name
+     * @param authorName
+     * @return AuthorDTO
+     */
     @Override
     public AuthorDTO getAuthorByAuthorName(String authorName) {
         if (Strings.isNullOrEmpty(authorName)) {
@@ -38,9 +48,16 @@ public class AuthorServiceImpl implements AuthorService {
             log.warn("author is null or empty");
             throw AuthorException.dataNotFoundException(AuthorException.AUTHOR_NOT_FOUND);
         });
+
         return authorMapper.map2AuthorDTO(author);
     }
 
+    // TODO:: add controller class for getAuthorsByAuthorNameList method
+    /**
+     * Returns authorDTO list by author name list parameter
+     * @param authorNameList
+     * @return List<AuthorDTO>
+     */
     @Override
     public List<AuthorDTO> getAuthorsByAuthorNameList(Collection<String> authorNameList) {
         if (CollectionUtils.isEmpty(authorNameList)) {
@@ -55,6 +72,11 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.map2AuthorDTOList(authorList);
     }
 
+    /**
+     * Adds new author to AUTHOR table if the author is not already added
+     * @param authorCreateDTO
+     * @return AuthorDTO
+     */
     @Override
     public AuthorDTO addAuthor(AuthorCreateDTO authorCreateDTO) {
         if (authorCreateDTO == null) {
@@ -66,6 +88,7 @@ public class AuthorServiceImpl implements AuthorService {
             log.warn("authorOptional is already added with id: {}", authorOptional.get().getId());
             throw AuthorException.invalidParameter(AuthorException.AUTHOR_ALREADY_ADDED);
         }
-        return authorMapper.map2AuthorDTO(authorRepository.save(authorMapper.map2Author(authorCreateDTO)));
+        Author author = authorRepository.save(authorMapper.map2Author(authorCreateDTO));
+        return authorMapper.map2AuthorDTO(author);
     }
 }
