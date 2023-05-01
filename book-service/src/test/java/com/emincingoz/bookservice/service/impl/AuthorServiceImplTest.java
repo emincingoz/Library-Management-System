@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import com.emincingoz.bookservice.dto.AuthorCreateDTO;
 import com.emincingoz.bookservice.dto.AuthorDTO;
-import com.emincingoz.bookservice.exception.AuthorException;
+import com.emincingoz.bookservice.exception.AuthorExceptionUtility;
 import com.emincingoz.bookservice.mapper.AuthorMapper;
 import com.emincingoz.bookservice.repository.AuthorRepository;
 import com.emincingoz.bookservice.repository.entity.Author;
@@ -44,13 +44,13 @@ class AuthorServiceImplTest {
 
     @Test
     void getAuthorByAuthorName_WhenAuthorNameNotGiven_ShouldThrowException() {
-        assertThatThrownBy(() -> authorService.getAuthorByAuthorName(null)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.getAuthorByAuthorName(null)).isInstanceOf(AuthorExceptionUtility.class);
     }
 
     @Test
     void getAuthorByAuthorName_WhenAuthorNameNotExists_ShouldThrowException() {
         when(authorRepository.findByAuthor(BookServiceTestUtil.INVALID_AUTHOR_NAME)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> authorService.getAuthorByAuthorName(BookServiceTestUtil.INVALID_AUTHOR_NAME)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.getAuthorByAuthorName(BookServiceTestUtil.INVALID_AUTHOR_NAME)).isInstanceOf(AuthorExceptionUtility.class);
         verify(authorRepository).findByAuthor(BookServiceTestUtil.INVALID_AUTHOR_NAME);
     }
 
@@ -66,13 +66,13 @@ class AuthorServiceImplTest {
 
     @Test
     void getAuthorsByAuthorNameList_WhenAuthorNameListNotGiven_ShouldThrowException() {
-        assertThatThrownBy(() -> authorService.getAuthorsByAuthorNameList(null)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.getAuthorsByAuthorNameList(null)).isInstanceOf(AuthorExceptionUtility.class);
     }
 
     @Test
     void getAuthorsByAuthorNameList_WhenAuthorNameListNotExists_ShouldThrowException() {
         List<String> authorNameList = new ArrayList<>(Collections.singleton("test"));
-        assertThatThrownBy(() -> authorService.getAuthorsByAuthorNameList(authorNameList)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.getAuthorsByAuthorNameList(authorNameList)).isInstanceOf(AuthorExceptionUtility.class);
     }
 
     @Test
@@ -88,7 +88,7 @@ class AuthorServiceImplTest {
 
     @Test
     void addAuthor_WhenAuthorCreateDTONotGiven_ShouldThrowException() {
-        assertThatThrownBy(() -> authorService.addAuthor(null)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.addAuthor(null)).isInstanceOf(AuthorExceptionUtility.class);
     }
 
     @Test
@@ -96,7 +96,7 @@ class AuthorServiceImplTest {
         Author author = BookServiceTestUtil.getAuthor();
         when(authorRepository.findByAuthor(author.getAuthor())).thenReturn(Optional.of(author));
         AuthorCreateDTO authorCreateDTO = new AuthorCreateDTO(author.getAuthor());
-        assertThatThrownBy(() -> authorService.addAuthor(authorCreateDTO)).isInstanceOf(AuthorException.class);
+        assertThatThrownBy(() -> authorService.addAuthor(authorCreateDTO)).isInstanceOf(AuthorExceptionUtility.class);
     }
 
     @Test

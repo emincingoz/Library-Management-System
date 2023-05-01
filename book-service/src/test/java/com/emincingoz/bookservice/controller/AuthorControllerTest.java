@@ -3,12 +3,10 @@ package com.emincingoz.bookservice.controller;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.awt.*;
-
-import com.emincingoz.bookservice.exception.AuthorException;
+import com.emincingoz.bookservice.exception.AuthorExceptionUtility;
 import com.emincingoz.bookservice.repository.AuthorRepository;
 import com.emincingoz.bookservice.service.AuthorService;
-import com.emincingoz.bookservice.util.BookServiceTestUtil;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,7 @@ class AuthorControllerTest {
      */
     @Test
     void getAuthorByAuthorName_WhenAuthorNameNotGiven_ShouldThrowException() throws Exception {
-        when(authorService.getAuthorByAuthorName(null)).thenThrow(new AuthorException(AuthorException.INVALID_PARAMETER));
+        when(authorService.getAuthorByAuthorName(null)).thenThrow(AuthorExceptionUtility.invalidRequestException(AuthorExceptionUtility.INVALID_PARAMETER));
         String url = URL + "/get-author-by-name/{authorName}";
         MvcResult mvcResult = mockMvc.perform(get(url, "").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
         System.out.println("dasds: " + mvcResult.getResponse().getStatus());
