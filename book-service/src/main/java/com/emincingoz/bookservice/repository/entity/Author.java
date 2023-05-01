@@ -1,5 +1,6 @@
 package com.emincingoz.bookservice.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,6 +8,11 @@ import lombok.*;
 
 import java.util.Set;
 
+/**
+ * Entity class for AUTHOR table
+ * @author Emin Cingoz
+ * @version 4/29/2023
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,11 +27,18 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUTHOR_ID_GENERATOR")
     private Long id;
 
+    /**
+     * Author name
+     */
     @Column(name = "AUTHOR")
     @NotNull
     @Size(max = 100)
     private String author;
 
-    @ManyToMany(mappedBy = "authorList")
+    /**
+     * List of books written by the author
+     */
+    @ManyToMany(mappedBy = "authorList", fetch = FetchType.LAZY)
+    @JsonBackReference  // to prevent infinite recursion
     private Set<Book> bookList;
 }
