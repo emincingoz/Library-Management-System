@@ -11,6 +11,7 @@ import com.emincingoz.bookservice.mapper.AuthorMapper;
 import com.emincingoz.bookservice.repository.AuthorRepository;
 import com.emincingoz.bookservice.repository.entity.Author;
 import com.emincingoz.bookservice.service.AuthorService;
+import com.emincingoz.bookservice.util.BookServiceUtil;
 
 import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
@@ -47,6 +48,7 @@ public class AuthorServiceImpl implements AuthorService {
             log.warn("authorName is null");
             throw AuthorExceptionUtility.invalidRequestException(AuthorExceptionUtility.INVALID_PARAMETER);
         }
+        authorName = BookServiceUtil.decodeInput(authorName);
         Author author = authorRepository.findByAuthor(authorName).orElseThrow(() -> {
             log.warn("author is null or empty");
             throw AuthorExceptionUtility.dataNotFoundException(AuthorExceptionUtility.AUTHOR_NOT_FOUND);

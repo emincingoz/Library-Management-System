@@ -1,7 +1,9 @@
 package com.emincingoz.bookservice.controller;
 
+import com.emincingoz.bookservice.controller.validation.WhiteSpaceChecker;
 import com.emincingoz.bookservice.dto.GenreCreateDTO;
 import com.emincingoz.bookservice.service.GenreService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class GenreController {
     }
 
     @GetMapping("/get-genre-by-name/{genre}")
-    public ResponseEntity<?> getGenreByGenreName(@PathVariable("genre") String genre) {
+    public ResponseEntity<?> getGenreByGenreName(@PathVariable("genre") @WhiteSpaceChecker String genre) {
         return new ResponseEntity<>(genreService.getGenreByGenreName(genre), HttpStatus.OK);
     }
 

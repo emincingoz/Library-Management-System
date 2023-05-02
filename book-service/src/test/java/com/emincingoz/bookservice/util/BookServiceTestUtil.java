@@ -1,18 +1,15 @@
 package com.emincingoz.bookservice.util;
 
-import java.util.Arrays;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.emincingoz.bookservice.repository.entity.Author;
 import com.emincingoz.bookservice.repository.entity.Book;
-import org.checkerframework.checker.units.qual.A;
 
 public class BookServiceTestUtil {
     public static final String INVALID_AUTHOR_NAME = ".";
     public static final Long VALID_ID = 1L;
-    public static final String VALID_AUTHOR_NAME = "test";
+    public static final String VALID_AUTHOR_NAME = "Test";
 
     public static Author getAuthor() {
         Author author = new Author();
