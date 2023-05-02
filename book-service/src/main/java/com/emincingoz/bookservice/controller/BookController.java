@@ -8,7 +8,6 @@ import com.emincingoz.bookservice.dto.BookDTO;
 import com.emincingoz.bookservice.service.BookService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +57,7 @@ public class BookController {
      * @return ResponseEntity<BookDTO>
      */
     @GetMapping("/get-book-by-isbn/{isbn}")
-    public ResponseEntity<BookDTO> getBookByIsbn(@PathVariable("isbn") String isbn) {
+    public ResponseEntity<BookDTO> getBookByIsbn(@PathVariable("isbn") @WhiteSpaceChecker(message = "isbn alanı boş bırakılamaz.") String isbn) {
         return new ResponseEntity<>(bookService.getBookByIsbn(isbn), HttpStatus.OK);
     }
 
@@ -69,7 +68,7 @@ public class BookController {
      * @return ResponseEntity<List < BookDTO>>
      */
     @GetMapping("/get-books-by-author/{author}")
-    public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable("author") @WhiteSpaceChecker @NotNull String author) {
+    public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable("author") @WhiteSpaceChecker String author) {
         return new ResponseEntity<>(bookService.getBooksByAuthor(author), HttpStatus.OK);
     }
 
@@ -92,7 +91,7 @@ public class BookController {
      * @return ResponseEntity<List < BookDTO>>
      */
     @GetMapping("/get-books-by-publisher/{publisher}")
-    public ResponseEntity<List<BookDTO>> getBooksByPublisher(@PathVariable("publisher") @WhiteSpaceChecker @NotNull String publisher) {
+    public ResponseEntity<List<BookDTO>> getBooksByPublisher(@PathVariable("publisher") @WhiteSpaceChecker String publisher) {
         return new ResponseEntity<>(bookService.getBooksByPublisher(publisher), HttpStatus.OK);
     }
 

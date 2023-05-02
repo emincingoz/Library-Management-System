@@ -1,7 +1,7 @@
 package com.emincingoz.bookservice.controller.validation;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Strings;
 import jakarta.validation.ConstraintValidator;
@@ -27,11 +27,18 @@ public class WhiteSpaceValidator implements ConstraintValidator<WhiteSpaceChecke
         if (s.replace("+", "").length() == 0) {
             return false;
         }
-//        String trimmedString = s.trim().replaceAll("\\s+", "+");
-        String newValue = s.replace("+", " ");
-        s = Arrays.stream(newValue.split("\\s+"))
-                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
-                .collect(Collectors.joining(" "));
-        return true;
+        if (StringUtils.isNumeric(s) || StringUtils.isNumeric(s.replace("+", ""))) {
+            return false;
+        }
+
+        // If the + signs are side by side in the parameter, validation should return false.
+        AtomicReference<Boolean> flagEmptyString = new AtomicReference<>(false);
+        String[] parts = s.split("\\+");
+        Arrays.stream(parts).forEach(part -> {
+            if (part.isEmpty()) {
+                flagEmptyString.set(true);
+            }
+        });
+        return !Boolean.TRUE.equals(flagEmptyString.get());
     }
 }

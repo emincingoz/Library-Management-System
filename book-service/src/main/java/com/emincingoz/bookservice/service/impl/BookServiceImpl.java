@@ -27,6 +27,7 @@ import com.emincingoz.bookservice.service.BookService;
 import com.emincingoz.bookservice.service.GenreService;
 import com.emincingoz.bookservice.service.InterpreterService;
 import com.emincingoz.bookservice.service.PublisherService;
+import com.emincingoz.bookservice.util.BookServiceUtil;
 
 import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
@@ -132,6 +133,7 @@ public class BookServiceImpl implements BookService {
             log.warn("Author is null");
             throw BookExceptionUtility.invalidRequestException(BookExceptionUtility.INVALID_PARAMETER);
         }
+        author = BookServiceUtil.decodeInput(author);
         List<Book> bookList = bookRepository.findByAuthorList_Author(author);
         if (CollectionUtils.isEmpty(bookList)) {
             log.warn("Book not found with given author information {}", author);
@@ -172,6 +174,7 @@ public class BookServiceImpl implements BookService {
             log.warn("publisher is null or empty");
             throw BookExceptionUtility.dataNotFoundException(BookExceptionUtility.INVALID_PARAMETER);
         }
+        publisher = BookServiceUtil.decodeInput(publisher);
         List<Book> bookList = bookRepository.findBooksByPublisher_Name(publisher);
         if (CollectionUtils.isEmpty(bookList)) {
             log.warn("bookList is empty");

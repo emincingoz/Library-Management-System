@@ -11,6 +11,7 @@ import com.emincingoz.bookservice.mapper.InterpreterMapper;
 import com.emincingoz.bookservice.repository.InterpreterRepository;
 import com.emincingoz.bookservice.repository.entity.Interpreter;
 import com.emincingoz.bookservice.service.InterpreterService;
+import com.emincingoz.bookservice.util.BookServiceUtil;
 
 import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
@@ -47,6 +48,7 @@ public class InterpreterServiceImpl implements InterpreterService {
             log.warn("interpreterName is null or empty");
             throw InterpreterExceptionUtility.invalidRequestException(InterpreterExceptionUtility.INVALID_PARAMETER);
         }
+        interpreterName = BookServiceUtil.decodeInput(interpreterName);
         Interpreter interpreter = interpreterRepository.findByInterpreter(interpreterName).orElseThrow(() -> {
             log.warn("interpreter is null or empty");
             throw InterpreterExceptionUtility.dataNotFoundException(InterpreterExceptionUtility.INTERPRETER_NOT_FOUND);

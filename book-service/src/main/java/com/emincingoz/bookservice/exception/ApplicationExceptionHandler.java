@@ -11,19 +11,23 @@ import com.emincingoz.bookservice.exception.core.model.ExceptionData;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * Controller Advice Class
  * General Exception Handler
+ * <p>
+ * The handler class used for RestControllerAdvice is usually extends ResponseEntityExceptionHandler,
+ * but the MethodArgumentNotValidException class gives an ambiguous usage error because it is defined in this extended class.
+ * So the extends statement has been removed from the class definition.
  *
  * @author Emin Cingoz
  * @version 5/1/2023
  */
 @RestControllerAdvice
-public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApplicationExceptionHandler {
 
     private final String APP_NAME = "book-service";
 
@@ -56,6 +60,19 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<Map<String, String>> handleValidationException(ConstraintViolationException exception) {
         ExceptionData exceptionData = ApplicationExceptionUtility.WHITE_SPACE_VALIDATION_EXCEPTION;
         Map<String, String> errorResponseMap = generateErrorResponseMap(exception, exceptionData);
+        return new ResponseEntity<>(errorResponseMap, HttpStatus.OK);
+    }
+
+    /**
+     * This method is called in case of annotations such as @NotNull, @NotEmpty thrown by Spring validation.
+     *
+     * @param exception
+     * @return ResponseEntity<Map < String, String>>
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidArgument(MethodArgumentNotValidException exception) {
+        Map<String, String> errorResponseMap = new HashMap<>();
+        exception.getBindingResult().getFieldErrors().forEach(error -> errorResponseMap.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errorResponseMap, HttpStatus.OK);
     }
 

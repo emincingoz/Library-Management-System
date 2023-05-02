@@ -1,13 +1,18 @@
 package com.emincingoz.bookservice.dto;
 
-import com.emincingoz.bookservice.model.BindingType;
-import com.emincingoz.bookservice.model.PaperType;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -22,6 +27,7 @@ public class BookCreateDTO {
     private String isbn;
 
     @NotNull
+    @NotEmpty
     private String title;
 
     @NotNull
@@ -31,6 +37,7 @@ public class BookCreateDTO {
     private String subTitle;
 
     @NotNull
+    @NotEmpty
     private String originalName;
 
     private Set<String> interpreterList;
@@ -53,6 +60,7 @@ public class BookCreateDTO {
     private Set<String> genreList;
 
     @NotNull
+    @NotEmpty
     private String publisher;
 
     private String publicationPlace;

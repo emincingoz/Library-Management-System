@@ -11,6 +11,7 @@ import com.emincingoz.bookservice.mapper.GenreMapper;
 import com.emincingoz.bookservice.repository.GenreRepository;
 import com.emincingoz.bookservice.repository.entity.Genre;
 import com.emincingoz.bookservice.service.GenreService;
+import com.emincingoz.bookservice.util.BookServiceUtil;
 
 import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
@@ -47,6 +48,7 @@ public class GenreServiceImpl implements GenreService {
             log.warn("genreName is null or empty");
             throw GenreExceptionUtility.invalidRequestException(GenreExceptionUtility.INVALID_PARAMETER);
         }
+        genreName = BookServiceUtil.decodeInput(genreName);
         Genre genre = genreRepository.findByGenre(genreName).orElseThrow(() -> {
             log.warn("genre is null or empty");
             throw GenreExceptionUtility.invalidRequestException(GenreExceptionUtility.GENRE_NOT_FOUND);

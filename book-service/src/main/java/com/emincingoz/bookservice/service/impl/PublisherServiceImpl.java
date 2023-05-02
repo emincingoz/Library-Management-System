@@ -1,5 +1,7 @@
 package com.emincingoz.bookservice.service.impl;
 
+import java.util.Optional;
+
 import com.emincingoz.bookservice.dto.PublisherCreateDTO;
 import com.emincingoz.bookservice.dto.PublisherDTO;
 import com.emincingoz.bookservice.exception.PublisherExceptionUtility;
@@ -7,14 +9,15 @@ import com.emincingoz.bookservice.mapper.PublisherMapper;
 import com.emincingoz.bookservice.repository.PublisherRepository;
 import com.emincingoz.bookservice.repository.entity.Publisher;
 import com.emincingoz.bookservice.service.PublisherService;
+import com.emincingoz.bookservice.util.BookServiceUtil;
+
 import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 /**
  * Publisher service interface implementation
+ *
  * @author Emin Cingoz
  * @version 4/29/2023
  */
@@ -32,6 +35,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     /**
      * Returns publisher dto by given publisher name
+     *
      * @param publisherName
      * @return PublisherDTO
      */
@@ -41,6 +45,7 @@ public class PublisherServiceImpl implements PublisherService {
             log.warn("publisherName is null or empty");
             throw PublisherExceptionUtility.invalidRequestException(PublisherExceptionUtility.INVALID_PARAMETER);
         }
+        publisherName = BookServiceUtil.decodeInput(publisherName);
         Publisher publisher = publisherRepository.findByName(publisherName).orElseThrow(() -> {
             log.warn("publisher is null or empty");
             throw PublisherExceptionUtility.invalidRequestException(PublisherExceptionUtility.PUBLISHER_NOT_FOUND);
@@ -50,6 +55,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     /**
      * Adds new publisher if it is not exists. Then returns added publisher as dto
+     *
      * @param publisherCreateDTO
      * @return PublisherDTO
      */
